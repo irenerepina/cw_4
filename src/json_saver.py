@@ -4,8 +4,8 @@ import json
 
 class Saver(ABC):
     """ Абстрактный класс для записи в файл """
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, filename=None):
+        self.__filename = filename
 
     @abstractmethod
     def write_data(self, vacancies):
@@ -34,19 +34,19 @@ class JSONSaver(Saver):
         data = self.get_data()
         data.extend(vacancies)
 
-        with open(self.filename, "w", encoding="utf-8") as file:
+        with open(self.__filename, "w", encoding="utf-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
 
     def get_data(self):
         """ Получение данных json """
 
         try:
-            return json.load(open(self.filename))
+            return json.load(open(self.__filename))
         except FileNotFoundError:
             return []
 
     def del_data(self):
         """ Удаление данных из файла """
 
-        with open(self.filename, "w", encoding="utf-8") as file:
+        with open(self.__filename, "w", encoding="utf-8") as file:
             json.dump([], file, ensure_ascii=False, indent=4)
